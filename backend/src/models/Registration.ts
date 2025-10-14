@@ -94,4 +94,4 @@ Registration.init(
   }
 );
 
-export default Registration;
+export { Registration };

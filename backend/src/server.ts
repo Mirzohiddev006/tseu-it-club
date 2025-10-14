@@ -6,7 +6,7 @@ import compression from "compression";
 import dotenv from "dotenv";
 import { sequelize } from "./config/database";
 import registrationRoutes from "./routes/registrationRoutes";
-import { errorHandler } from "./middleware/errorHandler";
+import { errorHandler } from "./middleware/erorrHandler";
 import { logger } from "./utils/logger";
 
 dotenv.config();

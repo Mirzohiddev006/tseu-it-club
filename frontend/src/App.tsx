@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import sampleClubs from "./sampleClubs";
-import { Club } from "./types";
 
 type FormData = {
   clubId: number | null;
@@ -11,7 +10,7 @@ type FormData = {
   notes: string;
 };
 
-const App: React.FC = () => {
+export const App: React.FC = () => {
   const [form, setForm] = useState<FormData>({
     clubId: null,
     name: "",
@@ -189,4 +188,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+

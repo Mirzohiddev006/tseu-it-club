@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
-import Registration from "../models/Registration";
+import { Registration } from "../models/Registration";
 import { logger } from "../utils/logger";
 import { sequelize } from "../config/database";
 

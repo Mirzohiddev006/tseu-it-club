@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
 import sampleClubs from "./sampleClubs";
+import { createClient } from "@supabase/supabase-js";
+
+// ✅ TO‘G‘RI SUPABASE MA’LUMOTLARINI KIRIT
+const supabaseUrl = "https://baockrrdriayusqpeeqw.supabase.co";
+const supabaseAnonKey =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJhb2NrcnJkcmlheXVzcXBlZXF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkyMTU5OTksImV4cCI6MjA3NDc5MTk5OX0.0bnIuVbwD-rFNX0acXhtNiofi6slJJTAohaEHTPsjP4";
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 type FormData = {
   clubId: number | null;
@@ -29,22 +37,35 @@ export const App: React.FC = () => {
         [k]: k === "clubId" ? Number(e.target.value) : e.target.value,
       }));
 
+  // ✅ Supabase orqali ma'lumot yuborish
   const submit = async () => {
     if (!form.clubId || !form.name) {
       setStatus("Iltimos, klub va ismingizni kiriting.");
       return;
     }
     setStatus("Yuborilmoqda...");
+
+    const clubName = sampleClubs.find((c) => c.id === form.clubId)?.name;
+
     try {
-      await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          club: sampleClubs.find((c) => c.id === form.clubId)?.name,
-          ...form,
-        }),
-      });
-      setStatus("Muvaffaqiyatli yuborildi.");
+      const { data, error } = await supabase.from("registrations").insert([
+        {
+          club: clubName,
+          name: form.name,
+          faculty: form.faculty,
+          course: form.course,
+          phone: form.phone,
+          notes: form.notes,
+        },
+      ]);
+
+      if (error) {
+        console.error("Supabase error:", error);
+        throw error;
+      }
+
+      console.log("Yangi ma'lumot:", data);
+      setStatus("✅ Muvaffaqiyatli yuborildi!");
       setForm({
         clubId: null,
         name: "",
@@ -54,7 +75,8 @@ export const App: React.FC = () => {
         notes: "",
       });
     } catch (err) {
-      setStatus("Xato: yuborilmadi.");
+      console.error("Xato:", err);
+      setStatus("❌ Xato: yuborilmadi.");
     }
   };
 
@@ -68,30 +90,17 @@ export const App: React.FC = () => {
 
   return (
     <div className="wrap">
-      <video
-        className="bg-video"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        poster="/image.png"
-      >
-        <source src="/movie.MOV" type="video/quicktime" />
-      </video>
-
       <div className="container">
         <header>
           <h1>TSUE Clubs — Registration</h1>
           <p className="lead">
             Assalomu alaykum! Bu Toshkent davlat iqtisodiyot universitetining
-            klublarini ro'yxatdan o'tkazish uchun sayt. Marhamat klubni tanlang
-            va ro'yxatdan o'ting.
+            klublarini ro'yxatdan o'tkazish uchun sayt.
           </p>
         </header>
 
         <section id="react-ui" className="main-card">
-          <div className="left" role="region" aria-label="Ro'yxat tafsilotlari">
+          <div className="left">
             <label htmlFor="club">Klub</label>
             <div className="field">
               <select
@@ -110,59 +119,49 @@ export const App: React.FC = () => {
             </div>
 
             <label htmlFor="name">Ism Familiya</label>
-            <div className="field">
-              <input
-                id="name"
-                type="text"
-                placeholder="Ism Familiya"
-                value={form.name}
-                onChange={handleChange("name")}
-              />
-            </div>
+            <input
+              id="name"
+              type="text"
+              placeholder="Ism Familiya"
+              value={form.name}
+              onChange={handleChange("name")}
+            />
 
             <label htmlFor="fak">Fakultet</label>
-            <div className="field small">
-              <input
-                id="fak"
-                type="text"
-                placeholder="Fakultet"
-                value={form.faculty}
-                onChange={handleChange("faculty")}
-              />
-            </div>
+            <input
+              id="fak"
+              type="text"
+              placeholder="Fakultet"
+              value={form.faculty}
+              onChange={handleChange("faculty")}
+            />
 
             <label htmlFor="kurs">Kurs</label>
-            <div className="field small">
-              <input
-                id="kurs"
-                type="text"
-                placeholder="Kurs"
-                value={form.course}
-                onChange={handleChange("course")}
-              />
-            </div>
+            <input
+              id="kurs"
+              type="text"
+              placeholder="Kurs"
+              value={form.course}
+              onChange={handleChange("course")}
+            />
 
             <label htmlFor="phone">Telefon (+998...)</label>
-            <div className="field">
-              <input
-                id="phone"
-                type="number"
-                placeholder="+99890xxxxxxx"
-                value={form.phone}
-                onChange={handleChange("phone")}
-              />
-            </div>
+            <input
+              id="phone"
+              type="number"
+              placeholder="+99890xxxxxxx"
+              value={form.phone}
+              onChange={handleChange("phone")}
+            />
 
             <label htmlFor="notes">Qiziqishlar (ixtiyoriy)</label>
-            <div className="field">
-              <input
-                id="notes"
-                type="text"
-                placeholder="Qiziqishlaringiz (ixtiyoriy)"
-                value={form.notes}
-                onChange={handleChange("notes")}
-              />
-            </div>
+            <input
+              id="notes"
+              type="text"
+              placeholder="Qiziqishlaringiz (ixtiyoriy)"
+              value={form.notes}
+              onChange={handleChange("notes")}
+            />
 
             <div style={{ marginTop: 14 }}>
               <button className="btn" type="button" onClick={submit}>
@@ -179,7 +178,7 @@ export const App: React.FC = () => {
             </div>
           </div>
 
-          <aside className="right" aria-hidden="true">
+          <aside className="right">
             <img src="/TDIU-logo.png" alt="TDIU" />
           </aside>
         </section>
@@ -187,5 +186,3 @@ export const App: React.FC = () => {
     </div>
   );
 };
-
-

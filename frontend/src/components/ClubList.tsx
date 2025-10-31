@@ -1,6 +1,6 @@
 import React from "react";
 import ClubCard from "./ClubCard";
-import { Club } from "../types";
+import { Club } from "../types/types";
 
 type Props = { clubs: Club[] };
 

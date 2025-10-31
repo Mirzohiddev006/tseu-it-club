@@ -1,14 +1,17 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import "./styles/index.css";
-import "./sampleClubs";
-import "./types";
-import { App } from "./App";
+import "./types/sampleClubs";
+import "./types/sampleClubs";
+import ClubsDashboard from "./pages/Clubdashboard";
+
+import "./pages/admin/AdminPanel";
+import App from "./App";
 
 const root = createRoot(document.getElementById("root")!);
 root.render(
   <React.StrictMode>
-    <App />
+    <ClubsDashboard />
   </React.StrictMode>
 );
 

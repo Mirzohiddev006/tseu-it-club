@@ -1,5 +1,3 @@
-import { Club } from "./types";
-
 const sampleClubs = [
   {
     id: 1,
@@ -133,6 +131,6 @@ const sampleClubs = [
     description: "Ijodiy loyihalar va tadbirlar.",
     telegram: "https://t.me/TDIU_Ijodkor_clubi",
   },
-] as unknown as Club[];
+];
 
-export default sampleClubs;
+export { sampleClubs };
